@@ -1,7 +1,7 @@
-#include <stdio.h>
 #include <stdbool.h>
-#include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 #define MAX_SIZE 100
 #define IMG_PATH "test"
@@ -11,18 +11,21 @@
 typedef struct graph graph_t;
 typedef struct searcher_info searcher_info_t;
 
-struct graph {
+struct graph
+{
     int matrix[MAX_SIZE][MAX_SIZE];
     int n_vertexes;
 };
 
-struct searcher_info {
+struct searcher_info
+{
     bool visited[MAX_SIZE];
     int path[MAX_SIZE];
     int path_cur_size;
 };
 
-void DFS(graph_t *graph, searcher_info_t *cur_path_info, searcher_info_t *max_path_info, int vertex) {
+void DFS(graph_t *graph, searcher_info_t *cur_path_info, searcher_info_t *max_path_info, int vertex)
+{
     cur_path_info->visited[vertex] = true;
     cur_path_info->path[cur_path_info->path_cur_size++] = vertex;
 
@@ -37,7 +40,8 @@ void DFS(graph_t *graph, searcher_info_t *cur_path_info, searcher_info_t *max_pa
     cur_path_info->path_cur_size--;
 }
 
-void find_max_path(graph_t *graph, searcher_info_t *max_path_info) {
+void find_max_path(graph_t *graph, searcher_info_t *max_path_info)
+{
     for (int cur_vertex = 0; cur_vertex < graph->n_vertexes; ++cur_vertex) {
         searcher_info_t cur_path_info = {};
         DFS(graph, &cur_path_info, max_path_info, cur_vertex);
@@ -49,13 +53,12 @@ void graph_to_dot(FILE *f, char *graph_name, graph_t *graph)
     fprintf(f, "digraph %s {\n\
     node [shape=oval, fontname=\"Arial\", fontsize=12];\
     edge [fontsize=10];",
-    graph_name);
+            graph_name);
 
     for (int i = 0; i < graph->n_vertexes; ++i)
         for (int j = 0; j < graph->n_vertexes; ++j)
             if (graph->matrix[i][j])
                 fprintf(f, "%d -> %d;\n", i + 1, j + 1);
-
 
     fprintf(f, "}\n");
 }
@@ -78,7 +81,8 @@ int open_graph_img(char *file_name, graph_t *graph)
     return 0;
 }
 
-int main() {
+int main()
+{
     graph_t graph = {};
     searcher_info_t max_path_info = {};
 

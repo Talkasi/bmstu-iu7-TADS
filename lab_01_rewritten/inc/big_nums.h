@@ -10,12 +10,12 @@
 #define DIGITS_PER_LONG (BITS_IN_LONG / BITS_PER_DIGIT)
 #define N_LONGS_IN_MANTISSA (BITS_IN_LONG / N_SIGNIFICANTS)
 
-
-typedef struct bdouble {
-	long mantissa[N_LONGS_IN_MANTISSA];
-	int d_in_mantissa;
-	int exponent;
-	char sign;
+typedef struct bdouble
+{
+    long mantissa[N_LONGS_IN_MANTISSA];
+    int d_in_mantissa;
+    int exponent;
+    char sign;
 } bdouble_t;
 
 int scanf_bdouble(bdouble_t *d);

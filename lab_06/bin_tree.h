@@ -4,17 +4,19 @@
 
 #define MAX_STR_LEN 256
 
-typedef enum {
-	ALLOC_ERR = -10
+typedef enum
+{
+    ALLOC_ERR = -10
 } errs;
 
 typedef struct node node_t;
 
-struct node {
-	char *data;
+struct node
+{
+    char *data;
 
-	node_t *left;
-	node_t *right;
+    node_t *left;
+    node_t *right;
 };
 
 int alloc_node(node_t **node);

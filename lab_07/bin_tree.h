@@ -5,21 +5,23 @@
 #define MAX_STR_LEN 256
 #define MAX_WORD_LEN 40
 
-typedef enum {
-	ALLOC_ERR = -10,
-	BAD_IMAGE = -11,
-	FILE_ERR
+typedef enum
+{
+    ALLOC_ERR = -10,
+    BAD_IMAGE = -11,
+    FILE_ERR
 } errs;
 
 typedef struct node node_t;
 
-struct node {
-	char data[MAX_WORD_LEN];
+struct node
+{
+    char data[MAX_WORD_LEN];
 
-	node_t *left;
-	node_t *right;
+    node_t *left;
+    node_t *right;
 
-	int height;
+    int height;
 };
 
 size_t fread_line(FILE *f, char *s, size_t max_len);
@@ -30,7 +32,7 @@ void tree_apply(void *f, node_t *root, void (*func)(void *, node_t *));
 int open_tree_img(char *file_name, node_t *root);
 node_t *put_data(node_t *root, node_t *new_node);
 int create_tree_from_file(FILE *f, node_t **root);
-void copyFile(const char* sourceFileName, const char* destinationFileName);
+void copyFile(const char *sourceFileName, const char *destinationFileName);
 
 int delete_by_first_letter_file(char *fileName, char c);
 node_t *delete_by_first_letter_tree(node_t *root, char c);
@@ -50,6 +52,5 @@ int create_balanced_from_bin_search_tree(node_t **balanced_tree, node_t *search_
 node_t *search_bin_tree(node_t *root, char *key, size_t *n_compares);
 void calc_node_size(node_t *tree, size_t *size);
 void calc_size_apply(node_t *search_tree, void func(node_t *, size_t *), size_t *size);
-
 
 #endif

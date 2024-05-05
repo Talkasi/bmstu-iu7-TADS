@@ -11,26 +11,29 @@
 #define LOG_SIZE 1000
 #define MAX_GEN_N 1000
 
-struct arr_stack {
-	int data[STACK_SIZE];
-	ssize_t ps;
+struct arr_stack
+{
+    int data[STACK_SIZE];
+    ssize_t ps;
 };
 
 typedef struct arr_stack arr_stack_t;
 typedef struct node node_t;
 typedef struct list_stack list_stack_t;
 
-struct node {
-	int el;
-	node_t *next;
+struct node
+{
+    int el;
+    node_t *next;
 };
 
-struct list_stack {
-	node_t *head;
+struct list_stack
+{
+    node_t *head;
 
-	node_t *free_log[LOG_SIZE];
-	size_t n_freed;
-	size_t n_els;
+    node_t *free_log[LOG_SIZE];
+    size_t n_freed;
+    size_t n_els;
 };
 
 int push_as(arr_stack_t *s, int new_el);

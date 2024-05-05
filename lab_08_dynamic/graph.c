@@ -1,9 +1,9 @@
 #include "graph.h"
 #include "input.h"
-#include <stdio.h>
 #include <stdbool.h>
-#include <unistd.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 void print_path(searcher_info_t *info)
 {
@@ -16,7 +16,8 @@ void print_path(searcher_info_t *info)
     printf("\n");
 }
 
-void matrix_graph_DFS(matrix_graph_t *graph, searcher_info_t *cur_path_info, searcher_info_t *max_path_info, int vertex) {
+void matrix_graph_DFS(matrix_graph_t *graph, searcher_info_t *cur_path_info, searcher_info_t *max_path_info, int vertex)
+{
     cur_path_info->visited[vertex] = true;
     cur_path_info->path[cur_path_info->path_cur_size++] = vertex;
 
@@ -31,7 +32,8 @@ void matrix_graph_DFS(matrix_graph_t *graph, searcher_info_t *cur_path_info, sea
     cur_path_info->path_cur_size--;
 }
 
-void find_max_simple_path_in_matrix_graph(matrix_graph_t *graph, searcher_info_t *max_path_info) {
+void find_max_simple_path_in_matrix_graph(matrix_graph_t *graph, searcher_info_t *max_path_info)
+{
     for (int cur_vertex = 0; cur_vertex < graph->n_vertexes; ++cur_vertex) {
         searcher_info_t cur_path_info = {};
         matrix_graph_DFS(graph, &cur_path_info, max_path_info, cur_vertex);
@@ -43,7 +45,7 @@ void matrix_graph_to_dot(FILE *f, char *graph_name, matrix_graph_t *graph)
     fprintf(f, "digraph %s {\n\
     node [shape=oval, fontname=\"Arial\", fontsize=12];\
     edge [fontsize=10];",
-    graph_name);
+            graph_name);
 
     for (int i = 0; i < graph->n_vertexes; ++i)
         for (int j = 0; j < graph->n_vertexes; ++j)
@@ -96,8 +98,7 @@ int fscanf_matrix_graph(FILE *f, matrix_graph_t *graph)
 
     for (int i = 0; i < graph->n_vertexes; ++i)
         for (int j = 0; j < graph->n_vertexes; ++j)
-            if (fscanf(f, "%d", &graph->matrix[i][j]) != 1 || 
-                (graph->matrix[i][j] != 0 && graph->matrix[i][j] != 1))
+            if (fscanf(f, "%d", &graph->matrix[i][j]) != 1 || (graph->matrix[i][j] != 0 && graph->matrix[i][j] != 1))
                 return READ_ERR;
 
     return 0;
@@ -118,10 +119,9 @@ void free_matrix_graph(matrix_graph_t *graph)
 //     node_t *new_node = calloc(1, sizeof(node_t));
 //     if (new_node != NULL)
 //         new_node->vertex = vertex;
-    
+
 //     return new_node;
 // }
-
 
 // void free_list_arr_graph(list_arr_graph_t *graph)
 // {
@@ -136,7 +136,6 @@ void free_matrix_graph(matrix_graph_t *graph)
 //     graph->list_arr = NULL;
 //     graph->n_vertexes = 0;
 // }
-
 
 // int fscanf_list_arr_graph(FILE *f, list_arr_graph_t *graph)
 // {
@@ -215,7 +214,6 @@ void free_matrix_graph(matrix_graph_t *graph)
 //     if (graph->n_vertexes == 0)
 //         return 1;
 
-    
 //     for (int i = 0; i < graph->n_vertexes; ++i)
 //         for (node_t *cur_node = graph->list_arr[i]->next; cur_node; cur_node = cur_node->next)
 //             if (cur_node->vertex == 1)
@@ -223,5 +221,3 @@ void free_matrix_graph(matrix_graph_t *graph)
 
 //     return 1;
 // }
-
-

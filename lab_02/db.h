@@ -29,25 +29,28 @@
 #define ERR_OVERFLOW 102
 #define FGETS_ZERO 103
 
-struct flat {
-	char address[MAX_ADDRESS_LEN];
-	int area;
-	char n_rooms;
-	long cost_per_square;
-	char housing_type;
-	union housing_t {
-		struct secondary_t {
-			int year;
-			char n_prev_owners;
-			char animals;
-		} secondary;
-		char decoration;
-	} housing;
+struct flat
+{
+    char address[MAX_ADDRESS_LEN];
+    int area;
+    char n_rooms;
+    long cost_per_square;
+    char housing_type;
+    union housing_t {
+        struct secondary_t
+        {
+            int year;
+            char n_prev_owners;
+            char animals;
+        } secondary;
+        char decoration;
+    } housing;
 };
 
-struct key_helper {
-	int n;
-	long cost;
+struct key_helper
+{
+    int n;
+    long cost;
 };
 
 typedef struct flat flat_t;

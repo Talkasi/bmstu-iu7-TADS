@@ -25,15 +25,17 @@ size_t fread_line(FILE *f, char *s, size_t max_len)
     return len_tmp;
 }
 
-int alloc_node(node_t **node) {
-	*node = calloc(1, sizeof(node_t));
-	if (!*node)
-		return ALLOC_ERR;
+int alloc_node(node_t **node)
+{
+    *node = calloc(1, sizeof(node_t));
+    if (!*node)
+        return ALLOC_ERR;
 
-	return 0;
+    return 0;
 }
 
-void free_tree(node_t **node) {
+void free_tree(node_t **node)
+{
     if (*node != NULL) {
         free_tree(&(*node)->right);
         free_tree(&(*node)->left);
@@ -42,13 +44,14 @@ void free_tree(node_t **node) {
     }
 }
 
-int create_node(node_t **node, char *s) {
-	int rc;
-	if ((rc = alloc_node(node)))
-		return rc;
+int create_node(node_t **node, char *s)
+{
+    int rc;
+    if ((rc = alloc_node(node)))
+        return rc;
 
-	strcpy((*node)->data, s);
-	return 0;
+    strcpy((*node)->data, s);
+    return 0;
 }
 
 void tree_apply(void *f, node_t *root, void (*func)(void *, node_t *))
@@ -77,7 +80,7 @@ void tree_to_dot(FILE *f, char *bin_tree_name, node_t *root)
     fprintf(f, "digraph %s {\n\
     node [shape=oval, fontname=\"Arial\", fontsize=12];\
     edge [fontsize=10];",
-    bin_tree_name);
+            bin_tree_name);
 
     tree_apply(f, root, node_to_dot);
 
@@ -102,36 +105,39 @@ int open_tree_img(char *file_name, node_t *root)
     return 0;
 }
 
-node_t *put_data(node_t *root, node_t *new_node) {
+node_t *put_data(node_t *root, node_t *new_node)
+{
     if (root == NULL)
         return new_node;
- 
+
     if (strcmp(new_node->data, root->data) < 0)
         root->left = put_data(root->left, new_node);
     else if (strcmp(new_node->data, root->data) > 0)
         root->right = put_data(root->right, new_node);
- 
+
     return root;
 }
 
-int create_tree_from_file(FILE *f, node_t **root) {
-	int rc;
+int create_tree_from_file(FILE *f, node_t **root)
+{
+    int rc;
     fseek(f, 0, SEEK_SET);
 
-	node_t *new_node;
-	size_t i = 0;
+    node_t *new_node;
+    size_t i = 0;
     char word[MAX_STR_LEN];
-	while (fread_line(f, word, MAX_WORD_LEN)) {
-		if ((rc = create_node(&new_node, word)))
-			return rc;
-		*root = put_data(*root, new_node);
-		++i;
-	}
+    while (fread_line(f, word, MAX_WORD_LEN)) {
+        if ((rc = create_node(&new_node, word)))
+            return rc;
+        *root = put_data(*root, new_node);
+        ++i;
+    }
 
-	return 0;
+    return 0;
 }
 
-void copyFile(const char *sourceFileName, const char *destinationFileName) {
+void copyFile(const char *sourceFileName, const char *destinationFileName)
+{
     FILE *sourceFile, *destinationFile;
     char ch;
 
@@ -155,8 +161,9 @@ void copyFile(const char *sourceFileName, const char *destinationFileName) {
     fclose(destinationFile);
 }
 
-int delete_by_first_letter_file(char *fileName, char c) {
-	char word[100];
+int delete_by_first_letter_file(char *fileName, char c)
+{
+    char word[100];
 
     FILE *file = fopen(fileName, "r+");
     if (file == NULL)
@@ -181,7 +188,7 @@ void printInorder(node_t *node)
 {
     if (node == NULL)
         return;
- 
+
     printInorder(node->left);
     printf("%s ", node->data);
     printInorder(node->right);
@@ -201,7 +208,7 @@ void printPostorder(node_t *node)
 {
     if (node == NULL)
         return;
- 
+
     printPostorder(node->left);
     printPostorder(node->right);
     printf("%s ", node->data);
@@ -211,22 +218,24 @@ node_t *delete_by_first_letter_tree(node_t *root, char c)
 {
     if (root == NULL)
         return root;
- 
+
     if (root->data[0] != c) {
         root->left = delete_by_first_letter_tree(root->left, c);
         root->right = delete_by_first_letter_tree(root->right, c);
         return root;
     }
- 
+
     if (root->left == NULL) {
         node_t *tmp = root->right;
         free(root);
         return delete_by_first_letter_tree(tmp, c);
-    } else if (root->right == NULL) {
+    }
+    else if (root->right == NULL) {
         node_t *tmp = root->left;
         free(root);
         return delete_by_first_letter_tree(tmp, c);
-    } else {
+    }
+    else {
         node_t *successor_parent = root;
         node_t *successor = root->right;
         while (successor->left != NULL) {
@@ -238,7 +247,7 @@ node_t *delete_by_first_letter_tree(node_t *root, char c)
             successor_parent->left = successor->right;
         else
             successor_parent->right = successor->right;
- 
+
         strcpy(root->data, successor->data);
         free(successor);
 
@@ -250,24 +259,27 @@ node_t *delete_data(node_t *root, char *key)
 {
     if (root == NULL)
         return root;
- 
+
     if (strcmp(root->data, key) > 0) {
         root->left = delete_data(root->left, key);
         return root;
-    } else if (strcmp(root->data, key) < 0) {
+    }
+    else if (strcmp(root->data, key) < 0) {
         root->right = delete_data(root->right, key);
         return root;
     }
- 
+
     if (root->left == NULL) {
         node_t *tmp = root->right;
         free(root);
         return tmp;
-    } else if (root->right == NULL) {
+    }
+    else if (root->right == NULL) {
         node_t *tmp = root->left;
         free(root);
         return tmp;
-    } else {
+    }
+    else {
         node_t *successor_parent = root;
         node_t *successor = root->right;
         while (successor->left != NULL) {
@@ -279,32 +291,36 @@ node_t *delete_data(node_t *root, char *key)
             successor_parent->left = successor->right;
         else
             successor_parent->right = successor->right;
- 
+
         strcpy(root->data, successor->data);
         free(successor);
         return root;
     }
 }
 
-int max(int a, int b) {
+int max(int a, int b)
+{
     return (a > b) ? a : b;
 }
 
-int height(node_t *node) {
+int height(node_t *node)
+{
     if (node == NULL)
         return 0;
 
     return node->height;
 }
 
-int get_balance(node_t *node) {
+int get_balance(node_t *node)
+{
     if (node == NULL)
         return 0;
 
     return height(node->left) - height(node->right);
 }
 
-node_t *right_rotate(node_t *root) {
+node_t *right_rotate(node_t *root)
+{
     node_t *new_root = root->left;
     node_t *prev_right_tail = new_root->right;
 
@@ -317,14 +333,15 @@ node_t *right_rotate(node_t *root) {
     return new_root;
 }
 
-node_t *search_bin_tree(node_t *root, char *key, size_t *n_compares) {
+node_t *search_bin_tree(node_t *root, char *key, size_t *n_compares)
+{
     if (root == NULL)
         return root;
-    
+
     ++*n_compares;
     if (strcmp(root->data, key) == 0)
         return root;
-    
+
     ++*n_compares;
     if (strcmp(root->data, key) > 0)
         return search_bin_tree(root->left, key, n_compares);
@@ -332,8 +349,8 @@ node_t *search_bin_tree(node_t *root, char *key, size_t *n_compares) {
         return search_bin_tree(root->right, key, n_compares);
 }
 
-
-node_t *left_rotate(node_t *root) {
+node_t *left_rotate(node_t *root)
+{
     node_t *new_root = root->right;
     node_t *prev_left_tail = new_root->left;
 
@@ -346,7 +363,8 @@ node_t *left_rotate(node_t *root) {
     return new_root;
 }
 
-node_t *insert_balanced(node_t *node, char *data) {
+node_t *insert_balanced(node_t *node, char *data)
+{
     if (node == NULL) {
         node_t *new_node = calloc(1, sizeof(node_t));
         if (new_node == NULL)
@@ -386,7 +404,8 @@ node_t *insert_balanced(node_t *node, char *data) {
     return node;
 }
 
-void preorderApply(node_t **balanced_tree, node_t *search_tree, node_t *func(node_t *, char *)) {
+void preorderApply(node_t **balanced_tree, node_t *search_tree, node_t *func(node_t *, char *))
+{
     if (search_tree == NULL)
         return;
 
@@ -401,11 +420,13 @@ void preorderApply(node_t **balanced_tree, node_t *search_tree, node_t *func(nod
     preorderApply(balanced_tree, search_tree->right, func);
 }
 
-void calc_node_size(node_t *tree, size_t *size) {
+void calc_node_size(node_t *tree, size_t *size)
+{
     *size += sizeof(tree);
 }
 
-void calc_size_apply(node_t *search_tree, void func(node_t *, size_t *), size_t *size) {
+void calc_size_apply(node_t *search_tree, void func(node_t *, size_t *), size_t *size)
+{
     if (search_tree == NULL)
         return;
 
@@ -414,7 +435,8 @@ void calc_size_apply(node_t *search_tree, void func(node_t *, size_t *), size_t 
     calc_size_apply(search_tree->right, func, size);
 }
 
-int create_balanced_from_bin_search_tree(node_t **balanced_tree, node_t *search_tree) {
+int create_balanced_from_bin_search_tree(node_t **balanced_tree, node_t *search_tree)
+{
     preorderApply(balanced_tree, search_tree, insert_balanced);
     if (*balanced_tree == NULL && search_tree != NULL)
         return ALLOC_ERR;

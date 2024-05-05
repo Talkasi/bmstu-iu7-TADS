@@ -25,15 +25,17 @@ size_t fread_line(FILE *f, char *s, size_t max_len)
     return len_tmp;
 }
 
-int alloc_node(node_t **node) {
-	*node = calloc(1, sizeof(node_t));
-	if (!*node)
-		return ALLOC_ERR;
+int alloc_node(node_t **node)
+{
+    *node = calloc(1, sizeof(node_t));
+    if (!*node)
+        return ALLOC_ERR;
 
-	return 0;
+    return 0;
 }
 
-void free_tree(node_t **node) {
+void free_tree(node_t **node)
+{
     if (*node != NULL) {
         free_tree(&(*node)->right);
         free_tree(&(*node)->left);
@@ -42,13 +44,14 @@ void free_tree(node_t **node) {
     }
 }
 
-int create_node(node_t **node, char *s) {
-	int rc;
-	if ((rc = alloc_node(node)))
-		return rc;
+int create_node(node_t **node, char *s)
+{
+    int rc;
+    if ((rc = alloc_node(node)))
+        return rc;
 
-	strcpy((*node)->data, s);
-	return 0;
+    strcpy((*node)->data, s);
+    return 0;
 }
 
 void tree_apply(void *f, node_t *root, void (*func)(void *, node_t *))
@@ -77,7 +80,7 @@ void tree_to_dot(FILE *f, char *bin_tree_name, node_t *root)
     fprintf(f, "digraph %s {\n\
     node [shape=oval, fontname=\"Arial\", fontsize=12];\
     edge [fontsize=10];",
-    bin_tree_name);
+            bin_tree_name);
 
     tree_apply(f, root, node_to_dot);
 
@@ -102,36 +105,39 @@ int open_tree_img(char *file_name, node_t *root)
     return 0;
 }
 
-node_t *put_data(node_t *root, node_t *new_node) {
+node_t *put_data(node_t *root, node_t *new_node)
+{
     if (root == NULL)
         return new_node;
- 
+
     if (strcmp(new_node->data, root->data) < 0)
         root->left = put_data(root->left, new_node);
     else if (strcmp(new_node->data, root->data) > 0)
         root->right = put_data(root->right, new_node);
- 
+
     return root;
 }
 
-int create_tree_from_file(FILE *f, node_t **root) {
-	free_tree(root);
-	int rc;
+int create_tree_from_file(FILE *f, node_t **root)
+{
+    free_tree(root);
+    int rc;
 
-	node_t *new_node;
-	size_t i = 0;
+    node_t *new_node;
+    size_t i = 0;
     char word[MAX_STR_LEN];
-	while (fread_line(f, word, MAX_WORD_LEN)) {
-		if ((rc = create_node(&new_node, word)))
-			return rc;
-		*root = put_data(*root, new_node);
-		++i;
-	}
+    while (fread_line(f, word, MAX_WORD_LEN)) {
+        if ((rc = create_node(&new_node, word)))
+            return rc;
+        *root = put_data(*root, new_node);
+        ++i;
+    }
 
-	return 0;
+    return 0;
 }
 
-void copyFile(const char* sourceFileName, const char* destinationFileName) {
+void copyFile(const char *sourceFileName, const char *destinationFileName)
+{
     FILE *sourceFile, *destinationFile;
     char ch;
 
@@ -155,8 +161,9 @@ void copyFile(const char* sourceFileName, const char* destinationFileName) {
     fclose(destinationFile);
 }
 
-int delete_by_first_letter_file(char *fileName, char c) {
-	char word[100];
+int delete_by_first_letter_file(char *fileName, char c)
+{
+    char word[100];
 
     FILE *file = fopen(fileName, "r+");
     if (file == NULL)
@@ -181,22 +188,24 @@ node_t *delete_by_first_letter_tree(node_t *root, char c)
 {
     if (root == NULL)
         return root;
- 
+
     if (root->data[0] != c) {
         root->left = delete_by_first_letter_tree(root->left, c);
         root->right = delete_by_first_letter_tree(root->right, c);
         return root;
     }
- 
+
     if (root->left == NULL) {
         node_t *tmp = root->right;
         free(root);
         return delete_by_first_letter_tree(tmp, c);
-    } else if (root->right == NULL) {
+    }
+    else if (root->right == NULL) {
         node_t *tmp = root->left;
         free(root);
         return delete_by_first_letter_tree(tmp, c);
-    } else {
+    }
+    else {
         node_t *successor_parent = root;
         node_t *successor = root->right;
         while (successor->left != NULL) {
@@ -208,7 +217,7 @@ node_t *delete_by_first_letter_tree(node_t *root, char c)
             successor_parent->left = successor->right;
         else
             successor_parent->right = successor->right;
- 
+
         strcpy(root->data, successor->data);
         free(successor);
 
@@ -222,24 +231,27 @@ node_t *delete_data(node_t *root, char *key)
 {
     if (root == NULL)
         return root;
- 
+
     if (strcmp(root->data, key) > 0) {
         root->left = delete_data(root->left, key);
         return root;
-    } else if (strcmp(root->data, key) < 0) {
+    }
+    else if (strcmp(root->data, key) < 0) {
         root->right = delete_data(root->right, key);
         return root;
     }
- 
+
     if (root->left == NULL) {
         node_t *tmp = root->right;
         free(root);
         return tmp;
-    } else if (root->right == NULL) {
+    }
+    else if (root->right == NULL) {
         node_t *tmp = root->left;
         free(root);
         return tmp;
-    } else {
+    }
+    else {
         node_t *successor_parent = root;
         node_t *successor = root->right;
         while (successor->left != NULL) {
@@ -251,7 +263,7 @@ node_t *delete_data(node_t *root, char *key)
             successor_parent->left = successor->right;
         else
             successor_parent->right = successor->right;
- 
+
         strcpy(root->data, successor->data);
         free(successor);
         return root;

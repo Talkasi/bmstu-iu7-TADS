@@ -3,7 +3,8 @@
 #include <stdio.h>
 #include <string.h>
 
-long del_useless_zeroes(char *arr, int *arr_len) {
+long del_useless_zeroes(char *arr, int *arr_len)
+{
     long new_len = 0;
     int leading_zeroes = 1;
     for (long i = 0; i < *arr_len; ++i) {
@@ -24,7 +25,8 @@ long del_useless_zeroes(char *arr, int *arr_len) {
     return zeroes_before;
 }
 
-int str_to_bdouble(char *number, struct my_big_double *n) {
+int str_to_bdouble(char *number, struct my_big_double *n)
+{
     int cur_i = 0;
     n->fraction_sign = +1;
     int were_sign = 0;
@@ -32,7 +34,8 @@ int str_to_bdouble(char *number, struct my_big_double *n) {
         n->fraction_sign = -1;
         ++cur_i;
         ++were_sign;
-    } else if (number[0] == '+') {
+    }
+    else if (number[0] == '+') {
         ++cur_i;
         ++were_sign;
     }
@@ -59,7 +62,8 @@ int str_to_bdouble(char *number, struct my_big_double *n) {
     int before = del_useless_zeroes(n->fraction, &n->fraction_len);
     n->exponent = 0;
     int exp_sign = 1;
-    if ((number[cur_i] == 'e' || number[cur_i] == 'E') && cur_i > 0 && (isdigit(number[cur_i - 1]) || number[cur_i - 1] == '.')) {
+    if ((number[cur_i] == 'e' || number[cur_i] == 'E') && cur_i > 0 &&
+        (isdigit(number[cur_i - 1]) || number[cur_i - 1] == '.')) {
         if (cur_i < point)
             point = cur_i;
         cur_i++;
@@ -67,7 +71,8 @@ int str_to_bdouble(char *number, struct my_big_double *n) {
         if (number[cur_i] == '-') {
             cur_i++;
             exp_sign = -1;
-        } else if (number[cur_i] == '+')
+        }
+        else if (number[cur_i] == '+')
             cur_i++;
 
         int i_exp = 0;
@@ -83,14 +88,16 @@ int str_to_bdouble(char *number, struct my_big_double *n) {
     return number[cur_i] != '\0';
 }
 
-int str_to_bint(char *number, struct my_big_int *n) {
+int str_to_bint(char *number, struct my_big_int *n)
+{
     int cur_i = 0;
 
     n->sign = +1;
     if (number[cur_i] == '-') {
         n->sign = -1;
         cur_i++;
-    } else if (number[cur_i] == '+')
+    }
+    else if (number[cur_i] == '+')
         cur_i++;
 
     n->digits_len = 0;
@@ -114,7 +121,8 @@ int str_to_bint(char *number, struct my_big_int *n) {
     return number[cur_i] != '\0';
 }
 
-void shift_round_bint(char *digits, char first_digit, int len) {
+void shift_round_bint(char *digits, char first_digit, int len)
+{
     int to_round = 1;
     int carry = 0;
     for (long i = NDIGITS_IN_BINT_x2 - 1; i > NDIGITS_IN_BINT_x2 - len; --i) {
@@ -124,16 +132,19 @@ void shift_round_bint(char *digits, char first_digit, int len) {
             if (digits[i] > 9) {
                 carry = 1;
                 digits[i] = digits[i] % 10;
-            } else
+            }
+            else
                 carry = 0;
-        } else
+        }
+        else
             digits[i] = digits[i - 1] + carry;
     }
 
     digits[len - 1] = first_digit;
 }
 
-void round_bdouble(char *digits, char last_digit, int len) {
+void round_bdouble(char *digits, char last_digit, int len)
+{
     if (last_digit < 5)
         return;
 
@@ -146,9 +157,11 @@ void round_bdouble(char *digits, char last_digit, int len) {
             if (digits[i] > 9) {
                 carry = 1;
                 digits[i] = digits[i] % 10;
-            } else
+            }
+            else
                 carry = 0;
-        } else
+        }
+        else
             digits[i] = digits[i - 1] + carry;
     }
 
@@ -159,7 +172,8 @@ void round_bdouble(char *digits, char last_digit, int len) {
     }
 }
 
-void mul_int_on_bint(int n, struct my_big_int *bint) {
+void mul_int_on_bint(int n, struct my_big_int *bint)
+{
     int tmp, carry = 0;
     long i;
     for (i = NDIGITS_IN_BINT_x2 - 1; i >= NDIGITS_IN_BINT_x2 - bint->digits_len; --i) {
@@ -172,12 +186,14 @@ void mul_int_on_bint(int n, struct my_big_int *bint) {
         if (i >= 0) {
             ++bint->digits_len;
             bint->digits[i] = carry;
-        } else
+        }
+        else
             shift_round_bint(bint->digits, carry, bint->digits_len);
     }
 }
 
-int bint_cmp(struct my_big_int *bi1, struct my_big_int *bi2) {
+int bint_cmp(struct my_big_int *bi1, struct my_big_int *bi2)
+{
     if (bi1->digits_len > bi2->digits_len)
         return 1;
     if (bi1->digits_len < bi2->digits_len)
@@ -192,14 +208,16 @@ int bint_cmp(struct my_big_int *bi1, struct my_big_int *bi2) {
     return 0;
 }
 
-int sub_bints(struct my_big_int *bigger, struct my_big_int *smaller) {
+int sub_bints(struct my_big_int *bigger, struct my_big_int *smaller)
+{
     int taken = 0;
     long i;
     for (i = NDIGITS_IN_BINT_x2 - 1; i >= NDIGITS_IN_BINT_x2 - smaller->digits_len; --i) {
         if (bigger->digits[i] >= smaller->digits[i] + taken) {
             bigger->digits[i] = bigger->digits[i] - smaller->digits[i] - taken;
             taken = 0;
-        } else {
+        }
+        else {
             bigger->digits[i] = 10 + bigger->digits[i] - smaller->digits[i] - taken;
             taken = 1;
         }
@@ -212,20 +230,23 @@ int sub_bints(struct my_big_int *bigger, struct my_big_int *smaller) {
         if (bigger->digits[i] == 0) {
             --bigger->digits_len;
             ++n_deleted;
-        } else
+        }
+        else
             break;
 
     return n_deleted;
 }
 
-int power(int base, int n) {
+int power(int base, int n)
+{
     int ans = 1;
     for (int i = 0; i < n; ++i)
         ans *= base;
     return ans;
 }
 
-int div_bdouble_by_bint(struct my_big_double *dividend, struct my_big_int *divisor, struct my_big_double *quotient) {
+int div_bdouble_by_bint(struct my_big_double *dividend, struct my_big_int *divisor, struct my_big_double *quotient)
+{
     quotient->fraction_sign = dividend->fraction_sign == divisor->sign ? 1 : -1;
     quotient->fraction_len = 0;
     quotient->exponent = dividend->exponent + 1;
@@ -235,7 +256,8 @@ int div_bdouble_by_bint(struct my_big_double *dividend, struct my_big_int *divis
         if (divisor->digits[i] == 0) {
             --quotient->exponent;
             ++n_shift;
-        } else
+        }
+        else
             break;
     }
 
@@ -344,7 +366,8 @@ int div_bdouble_by_bint(struct my_big_double *dividend, struct my_big_int *divis
     for (long i = quotient->fraction_len - 1; i > 0; --i)
         if (quotient->fraction[i] == 0) {
             --quotient->fraction_len;
-        } else
+        }
+        else
             break;
 
     if (quotient->exponent / power(10, NDIGITS_IN_EXP) != 0)
@@ -352,14 +375,16 @@ int div_bdouble_by_bint(struct my_big_double *dividend, struct my_big_int *divis
     return 0;
 }
 
-int is_bint_zero(struct my_big_int *bint) {
+int is_bint_zero(struct my_big_int *bint)
+{
     if (bint->digits_len == 1 && bint->digits[NDIGITS_IN_BINT_x2 - 1] == 0)
         return 1;
 
     return 0;
 }
 
-void print_bdouble(struct my_big_double *n) {
+void print_bdouble(struct my_big_double *n)
+{
     if (n->fraction_len == 1 && n->fraction[0] == 0)
         printf("+0.E+0\n");
     else {
@@ -370,7 +395,8 @@ void print_bdouble(struct my_big_double *n) {
     }
 }
 
-void print_bint(struct my_big_int *n) {
+void print_bint(struct my_big_int *n)
+{
     printf("%c", n->sign > 0 ? '+' : '-');
     for (int i = NDIGITS_IN_BINT_x2 - n->digits_len; i < NDIGITS_IN_BINT_x2; ++i)
         printf("%d", n->digits[i]);

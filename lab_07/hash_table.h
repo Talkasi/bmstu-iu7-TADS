@@ -7,19 +7,22 @@
 
 typedef struct node_entry node_entry_t;
 
-struct node_entry {
+struct node_entry
+{
     char key[MAX_WORD_LEN];
     node_entry_t *next;
 };
 
-typedef struct list_hash_table {
+typedef struct list_hash_table
+{
     node_entry_t **table;
     long long n_compare;
     int n_searches;
     int cur_size;
 } list_hash_table_t;
 
-typedef struct arr_hash_table {
+typedef struct arr_hash_table
+{
     char table[TABLE_SIZE][MAX_WORD_LEN];
     long long n_compare;
     int n_searches;
